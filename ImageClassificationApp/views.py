@@ -41,6 +41,11 @@ def register_page(request):
     return render(request, 'ImageClassificationApp/register_page.html', context=context)
 
 
+def logout_user(request):
+
+    logout(request)
+    return redirect('/login')
+
 
 def home_page(request):
 
