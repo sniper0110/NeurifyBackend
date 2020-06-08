@@ -13,8 +13,13 @@ class Task(models.Model):
     task_name = models.CharField(max_length=30, null=True)
 
 
+class ImageClass(models.Model):
+    task = models.ForeignKey(to=Task, null=True, on_delete=models.CASCADE)
+    image_classname = models.CharField(max_length=30, null=True)
+
+
 class ImageData(models.Model):
 
-    task = models.ForeignKey(to=Task, null=True, on_delete=models.CASCADE)
+    imageclass = models.ForeignKey(to=ImageClass, null=True, on_delete=models.CASCADE)
     image = models.ImageField(null=True, upload_to='data/')
 
