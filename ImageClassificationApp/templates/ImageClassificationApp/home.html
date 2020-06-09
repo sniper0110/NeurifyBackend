@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     {% load static %}
-
     <meta charset="UTF-8">
-    <title>Main Page</title>
+
     <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
     <script src="{% static 'ImageClassificationApp/js/side_and_nav_bars.js' %}"></script>
+    <script src="{% static 'ImageClassificationApp/js/cards.js' %}"></script>
     <link rel="stylesheet" href="{% static 'ImageClassificationApp/css/side_and_nav_bars.css' %}">
+
+    <title>Main Page</title>
 </head>
 <body>
 
@@ -50,13 +54,13 @@
               <li>
                 <a href="#" class="active">
                   <span class="icon"><i class="fas fa-dice-d6"></i></span>
-                  <span class="title">Dashboard</span>
+                  <span class="title">New Task</span>
                 </a>
               </li>
               <li>
                 <a href="#" class="active2">
                   <span class="icon"><i class="fab fa-delicious"></i></span>
-                  <span class="title">Forms</span>
+                  <span class="title">Dashboard</span>
                 </a>
               </li>
               <li>
@@ -81,27 +85,14 @@
           </div>
       </div>
       <div class="container">
-        <div class="item">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab a nesciunt doloribus. Explicabo minus cumque, molestiae tempore repellendus iusto enim maiores pariatur officiis perferendis excepturi, ut dolore laborum eligendi laudantium placeat aspernatur! Quos dolorum unde officiis labore est animi excepturi neque, provident, inventore nobis expedita facilis aspernatur, nihil in atque?
+
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" src="/media/site_images/empty_img.svg" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">Image Classification</p>
+          </div>
         </div>
-        <div class="item">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab a nesciunt doloribus. Explicabo minus cumque, molestiae tempore repellendus iusto enim maiores pariatur officiis perferendis excepturi, ut dolore laborum eligendi laudantium placeat aspernatur! Quos dolorum unde officiis labore est animi excepturi neque, provident, inventore nobis expedita facilis aspernatur, nihil in atque?
-        </div>
-        <div class="item">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab a nesciunt doloribus. Explicabo minus cumque, molestiae tempore repellendus iusto enim maiores pariatur officiis perferendis excepturi, ut dolore laborum eligendi laudantium placeat aspernatur! Quos dolorum unde officiis labore est animi excepturi neque, provident, inventore nobis expedita facilis aspernatur, nihil in atque?
-        </div>
-        <div class="item">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab a nesciunt doloribus. Explicabo minus cumque, molestiae tempore repellendus iusto enim maiores pariatur officiis perferendis excepturi, ut dolore laborum eligendi laudantium placeat aspernatur! Quos dolorum unde officiis labore est animi excepturi neque, provident, inventore nobis expedita facilis aspernatur, nihil in atque?
-        </div>
-        <div class="item">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab a nesciunt doloribus. Explicabo minus cumque, molestiae tempore repellendus iusto enim maiores pariatur officiis perferendis excepturi, ut dolore laborum eligendi laudantium placeat aspernatur! Quos dolorum unde officiis labore est animi excepturi neque, provident, inventore nobis expedita facilis aspernatur, nihil in atque?
-        </div>
-        <div class="item">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab a nesciunt doloribus. Explicabo minus cumque, molestiae tempore repellendus iusto enim maiores pariatur officiis perferendis excepturi, ut dolore laborum eligendi laudantium placeat aspernatur! Quos dolorum unde officiis labore est animi excepturi neque, provident, inventore nobis expedita facilis aspernatur, nihil in atque?
-        </div>
-        <div class="item">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab a nesciunt doloribus. Explicabo minus cumque, molestiae tempore repellendus iusto enim maiores pariatur officiis perferendis excepturi, ut dolore laborum eligendi laudantium placeat aspernatur! Quos dolorum unde officiis labore est animi excepturi neque, provident, inventore nobis expedita facilis aspernatur, nihil in atque?
-        </div>
+
       </div>
   </div>
 
