@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 class Customer(models.Model):
 
     site_user = models.OneToOneField(to=User, null=True, on_delete=models.DO_NOTHING)
+    username = models.CharField(max_length=30, null=True)
+    email = models.EmailField(null=True)
 
 
 class Task(models.Model):
