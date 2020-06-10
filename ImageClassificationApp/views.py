@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .decorators import unauthenticated_user
+from django.http import JsonResponse
+from django.forms import inlineformset_factory
 
-from .forms import UserForm
+
+from .decorators import unauthenticated_user
+from .forms import UserForm, TaskForm, ImageClassForm
+from .models import Customer, Task, ImageClass
 
 # Create your views here.
 
@@ -47,10 +51,50 @@ def logout_user(request):
     return redirect('/login')
 
 
-def home_page(request):
+def home(request):
 
     return render(request, 'ImageClassificationApp/home.html')
 
+
+
+def image_classification_content(request):
+
+    TaskFormset = inlineformset_factory(Customer, Task, fields=('task_name',), extra=1)
+    formset = TaskFormset(queryset=Task.objects.none(), instance=request.user.customer)
+
+    if request.method == 'POST':
+
+        formset = TaskFormset(request.POST, instance=request.user.customer)
+        if formset.is_valid():
+            saved_formset = formset.save()
+
+            '''
+            inst = someForm.customSave(request.user)
+            inst.pk or inst.id
+            '''
+            return redirect(f'/home/image_classification/{saved_formset[0].pk}')
+
+    context = {'formset':formset}
+    return render(request, 'ImageClassificationApp/image_classification_content.html', context=context)
+
+
+
+
+def image_classes_task(request, pk):
+
+    task_from_pk = Task.objects.get(pk=pk)
+
+    ImageClassFormset = inlineformset_factory(Task, ImageClass, fields=('image_classname',), extra=1)
+    formset = ImageClassFormset(queryset=ImageClass.objects.none(), instance=task_from_pk)
+
+    if request.method == 'POST':
+        formset = ImageClassFormset(request.POST, instance=task_from_pk)
+        if formset.is_valid():
+            formset.save()
+            return redirect(f'/home')
+
+    context = {'formset': formset}
+    return render(request, 'ImageClassificationApp/image_classes_form.html', context=context)
 
 
 def data_handling(request):

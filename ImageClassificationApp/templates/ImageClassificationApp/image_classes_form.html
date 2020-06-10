@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "ImageClassificationApp/home.html" %}
+
+
+{% block main_content %}
+<div class="container">
+
+    <div class="task-form">
+        <h1>This is where the image classes form will be</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <input type="submit" value="Save">
+        </form>
+    </div>
+
+  </div>
+{% endblock %}
+
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "ImageClassificationApp/home.html" %}
+
+
+{% block main_content %}
+<div class="container">
+
+    <div class="task-form">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{formset.as_p}}
+            <input type="submit" value="Save">
+        </form>
+    </div>
+
+  </div>
+{% endblock %}
+
+</html>
