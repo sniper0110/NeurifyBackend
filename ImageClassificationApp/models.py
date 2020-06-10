@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from .common import build_upload_to_path_for_images
 # Create your models here.
 
 class Customer(models.Model):
@@ -26,5 +27,5 @@ class ImageClass(models.Model):
 class ImageData(models.Model):
 
     imageclass = models.ForeignKey(to=ImageClass, null=True, on_delete=models.CASCADE)
-    image = models.ImageField(null=True, upload_to='data/')
+    image = models.ImageField(null=True, upload_to=build_upload_to_path_for_images)
 

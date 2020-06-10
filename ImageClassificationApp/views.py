@@ -5,8 +5,8 @@ from django.forms import inlineformset_factory
 
 
 from .decorators import unauthenticated_user
-from .forms import UserForm, TaskForm, ImageClassForm
-from .models import Customer, Task, ImageClass
+from .forms import UserForm
+from .models import Customer, Task, ImageClass, ImageData
 
 # Create your views here.
 
@@ -57,7 +57,7 @@ def home(request):
 
 
 
-def image_classification_content(request):
+def adding_task(request):
 
     TaskFormset = inlineformset_factory(Customer, Task, fields=('task_name',), extra=1)
     formset = TaskFormset(queryset=Task.objects.none(), instance=request.user.customer)
@@ -67,22 +67,16 @@ def image_classification_content(request):
         formset = TaskFormset(request.POST, instance=request.user.customer)
         if formset.is_valid():
             saved_formset = formset.save()
-
-            '''
-            inst = someForm.customSave(request.user)
-            inst.pk or inst.id
-            '''
             return redirect(f'/home/image_classification/{saved_formset[0].pk}')
 
-    context = {'formset':formset}
+    context = {'formset': formset}
     return render(request, 'ImageClassificationApp/image_classification_content.html', context=context)
 
 
-
-
-def image_classes_task(request, pk):
+def adding_imageclass(request, pk):
 
     task_from_pk = Task.objects.get(pk=pk)
+    print('pk for task is in : ', task_from_pk.pk)
 
     ImageClassFormset = inlineformset_factory(Task, ImageClass, fields=('image_classname',), extra=1)
     formset = ImageClassFormset(queryset=ImageClass.objects.none(), instance=task_from_pk)
@@ -90,11 +84,30 @@ def image_classes_task(request, pk):
     if request.method == 'POST':
         formset = ImageClassFormset(request.POST, instance=task_from_pk)
         if formset.is_valid():
-            formset.save()
-            return redirect(f'/home')
+            instances = formset.save()
+            pk_imageclass = instances[0].pk
+            print('pk for imageclass is in : ', instances[0].pk)
+            return redirect(f'/home/image_classification/{pk}/{pk_imageclass}')
 
     context = {'formset': formset}
     return render(request, 'ImageClassificationApp/image_classes_form.html', context=context)
+
+
+def adding_images(request, pk1, pk2):
+
+    imageclass_from_pk = ImageClass.objects.get(pk=pk2)
+    ImageDataFormset = inlineformset_factory(ImageClass, ImageData, fields=('image',), extra=1)
+    formset = ImageDataFormset(queryset=ImageData.objects.none(), instance=imageclass_from_pk)
+
+    if request.method == 'POST':
+        formset = ImageDataFormset(request.POST, request.FILES, instance=imageclass_from_pk)
+        if formset.is_valid():
+            formset.save()
+            return redirect('/home')
+
+    task = Task.objects.get(pk=pk1)
+    context = {'formset': formset, 'task': task, 'imageclass': imageclass_from_pk}
+    return render(request, 'ImageClassificationApp/images_upload_form.html', context=context)
 
 
 def data_handling(request):

@@ -2,8 +2,10 @@ $(document).ready(function() {
 
   $(".img-classification-card").click(function(){
     console.log("img-classification-card clicked!")
-
   });
 
-// document ready
+  $("#id_imageclass_set-0-DELETE").hide()
+
+  $('label[for="id_imageclass_set-0-DELETE"]').hide();
+
 });

@@ -7,11 +7,18 @@
 {% block main_content %}
 <div class="container">
 
+    <div>
+        Task : {{task.task_name}}
+    </div>
+    <div>
+        Images class : {{imageclass.image_classname}}
+    </div>
+
+
     <div class="task-form">
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{formset.as_p}}
-            {{form.as_p}}
             <input type="submit" value="Save">
         </form>
     </div>

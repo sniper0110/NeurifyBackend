@@ -23,3 +23,10 @@ class ImageClassForm(ModelForm):
         model = ImageClass
         fields = '__all__'
 
+
+class ImageDataForm(ModelForm):
+
+    class Meta:
+        model = ImageData
+        fields = '__all__'
+
