@@ -5,7 +5,7 @@ from django.forms import inlineformset_factory
 
 
 from .decorators import unauthenticated_user
-from .forms import UserForm
+from .forms import UserForm, ImageDataForm
 from .models import Customer, Task, ImageClass, ImageData
 
 # Create your views here.
@@ -96,18 +96,19 @@ def adding_imageclass(request, pk):
 def adding_images(request, pk1, pk2):
 
     imageclass_from_pk = ImageClass.objects.get(pk=pk2)
-    ImageDataFormset = inlineformset_factory(ImageClass, ImageData, fields=('image',), extra=1)
-    formset = ImageDataFormset(queryset=ImageData.objects.none(), instance=imageclass_from_pk)
+    task = Task.objects.get(pk=pk1)
 
     if request.method == 'POST':
-        formset = ImageDataFormset(request.POST, request.FILES, instance=imageclass_from_pk)
-        if formset.is_valid():
-            formset.save()
-            return redirect('/home')
 
-    task = Task.objects.get(pk=pk1)
-    context = {'formset': formset, 'task': task, 'imageclass': imageclass_from_pk}
+        print('request.POST = ', request.FILES)
+        for file in request.FILES.getlist('images'):
+            ImageData.objects.create(imageclass=imageclass_from_pk, image=file)
+
+        return redirect('/home')
+
+    context = {'task': task, 'imageclass': imageclass_from_pk}
     return render(request, 'ImageClassificationApp/images_upload_form.html', context=context)
+
 
 
 def data_handling(request):
