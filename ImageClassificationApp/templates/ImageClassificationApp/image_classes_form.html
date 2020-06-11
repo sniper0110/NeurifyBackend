@@ -7,6 +7,25 @@
 {% block main_content %}
 <div class="container">
 
+    <div>
+        Task : {{task.task_name}}
+    </div>
+    <div>
+        {% if imageclasses_already_in_task %}
+            <div>
+                Already created classes :
+            </div>
+
+            {% for imgclass in imageclasses_already_in_task %}
+                <div>
+                    {{imgclass}}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
+
     <div class="task-form">
         <form action="" method="post">
             {% csrf_token %}

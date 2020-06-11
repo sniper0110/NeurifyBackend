@@ -11,6 +11,7 @@ urlpatterns=[
     path('home/image_classification', views.adding_task, name='image_classification'),
     path('home/image_classification/<str:pk>', views.adding_imageclass, name='image_classes_task'),
     path('home/image_classification/<str:pk1>/<str:pk2>', views.adding_images, name='upload_images'),
+    path('home/classification_training', views.classification_training, name='classification_training'),
     path('login', views.login_page, name='login_page'),
     path('register', views.register_page, name='register_page'),
     path('', views.logout_user, name='logout'),
