@@ -126,7 +126,20 @@ def adding_images(request, pk1, pk2):
 
 def classification_training(request):
 
-    return render(request, 'ImageClassificationApp/classification_training_page.html')
+    last_added_task = request.user.customer.task_set.last()
+    image_classes = last_added_task.imageclass_set.all()
+    class_to_images_dict = dict()
+
+    for imageclass in image_classes:
+        imagedata_set = imageclass.imagedata_set.all()
+        class_to_images_dict.update({imageclass:imagedata_set})
+
+
+    print("last task name is : ", last_added_task.task_name)
+    print("class_to_images_dict = ", class_to_images_dict)
+
+    context = {'last_task':last_added_task, 'image_classes': image_classes, "class_to_images_dict": class_to_images_dict}
+    return render(request, 'ImageClassificationApp/classification_training_page.html', context=context)
 
 
 def data_handling(request):

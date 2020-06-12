@@ -30,6 +30,9 @@ class ImageClass(models.Model):
     def __str__(self):
         return self.image_classname
 
+    def get_all_images_of_class(self):
+        return ImageData.objects.filter(imageclass=self)
+
 
 class ImageData(models.Model):
 

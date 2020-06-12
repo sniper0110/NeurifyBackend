@@ -4,17 +4,72 @@
 {% extends "ImageClassificationApp/home.html" %}
 {% load static %}
 
+
+
 {% block main_content %}
 <div class="container">
+<link rel="stylesheet" href="{% static 'ImageClassificationApp/css/training_page.css' %}">
 
-<h1>Training page!</h1>
 
+{% if last_task %}
+
+    <div>
+        <h2>Task : {{last_task.task_name}}</h2>
+    </div>
+    <div>
+        {% for imageclass in image_classes %}
+        <div class="card">
+            <div class="card-body">
+
+                <button class="collapsible">{{imageclass.image_classname}}</button>
+                <div class="content">
+                  {% for imagedata in imageclass.get_all_images_of_class %}
+                    <img src="{{imagedata.image.url}}" alt="" width="100">
+                  {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endif %}
+
+
+
+
+
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
+</script>
 
 </div>
 {% endblock %}
 
 {% block javascript %}
 <script src="{% static 'ImageClassificationApp/js/training_page.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+
+    $('#collapseExample').on('hidden.bs.collapse', function () {
+    // do something…
+    })
+
+})
+</script>
 {% endblock %}
 
 </html>
