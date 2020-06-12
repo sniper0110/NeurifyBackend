@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     $(".hamburger .hamburger__inner").click(function(){
       $(".wrapper").toggleClass("active")
     })
@@ -7,6 +8,6 @@ $(document).ready(function(){
        $(".profile_dd").toggleClass("active");
     });
 
-    $(".new_task").toggleClass("active")
+    $(".dashboard").addClass("active")
 
 });
