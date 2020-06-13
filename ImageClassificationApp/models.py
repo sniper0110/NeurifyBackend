@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from .common import build_upload_to_path_for_images
+
 # Create your models here.
 
 class Customer(models.Model):
