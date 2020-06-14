@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "ImageClassificationApp/home.html" %}
+{% load static %}
+
+{% block main_content %}
+<div class="container">
+    <h1>This is the history page! (all previously created tasks shall be here!)</h1>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'ImageClassificationApp/js/history_page.js' %}"></script>
+{% endblock %}
+
+</html>

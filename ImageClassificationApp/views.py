@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.forms import inlineformset_factory
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .decorators import unauthenticated_user
 from .forms import UserForm, ImageDataForm
@@ -51,12 +52,13 @@ def logout_user(request):
     return redirect('/login')
 
 
+@login_required(login_url='ImageClassificationApp:login_page')
 def home(request):
 
     return render(request, 'ImageClassificationApp/home.html')
 
 
-
+@login_required(login_url='ImageClassificationApp:login_page')
 def adding_task(request):
 
     TaskFormset = inlineformset_factory(Customer, Task, fields=('task_name',), extra=1)
@@ -80,6 +82,7 @@ def adding_task(request):
     return render(request, 'ImageClassificationApp/image_classification_content.html', context=context)
 
 
+@login_required(login_url='ImageClassificationApp:login_page')
 def adding_imageclass(request, pk):
 
     task_from_pk = Task.objects.get(pk=pk)
@@ -108,6 +111,7 @@ def adding_imageclass(request, pk):
     return render(request, 'ImageClassificationApp/image_classes_form.html', context=context)
 
 
+@login_required(login_url='ImageClassificationApp:login_page')
 def adding_images(request, pk1, pk2):
 
     imageclass_from_pk = ImageClass.objects.get(pk=pk2)
@@ -143,6 +147,7 @@ def adding_images(request, pk1, pk2):
     return render(request, 'ImageClassificationApp/images_upload_form.html', context=context)
 
 
+@login_required(login_url='ImageClassificationApp:login_page')
 def classification_training(request):
 
     last_added_task = request.user.customer.task_set.last()
@@ -161,9 +166,10 @@ def classification_training(request):
     return render(request, 'ImageClassificationApp/classification_training_page.html', context=context)
 
 
-def data_handling(request):
+@login_required(login_url='ImageClassificationApp:login_page')
+def history_page(request):
 
-    return render(request, 'ImageClassificationApp/data_handling_page.html')
+    return render(request, 'ImageClassificationApp/history_page.html')
 
 
 
