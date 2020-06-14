@@ -10,11 +10,11 @@
 <h1>Done creating the task!</h1>
 <form action="{% url 'ImageClassificationApp:image_classification' %}">
     {% csrf_token %}
-    <input type="submit" value="Create a new task" />
+    <input type="submit" class="green_button" value="Create a new task" />
 </form>
 <form action="{% url 'ImageClassificationApp:classification_training' %}">
     {% csrf_token %}
-    <input type="submit" value="Go to training page" />
+    <input type="submit" class="green_button" value="Go to training page" />
 </form>
 
 </div>

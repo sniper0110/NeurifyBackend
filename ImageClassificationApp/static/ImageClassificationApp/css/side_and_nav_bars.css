@@ -68,9 +68,10 @@
 }
 
 .top_navbar .menu .logo{
-  color: #004D40;
+  color: black;
   text-transform: uppercase;
   letter-spacing: 2px;
+  font-weight: 900;
 }
 
 .top_navbar .menu .right_menu ul{

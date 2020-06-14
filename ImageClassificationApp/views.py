@@ -65,6 +65,13 @@ def adding_task(request):
     if request.method == 'POST':
 
         formset = TaskFormset(request.POST, instance=request.user.customer)
+        task_name = formset.cleaned_data[0]['task_name']
+
+        if task_name in [name.task_name for name in Task.objects.all()]:
+            messages.warning(request, "Task name already exists! Please choose another name!")
+            context = {'formset': formset}
+            return render(request, 'ImageClassificationApp/image_classification_content.html', context=context)
+
         if formset.is_valid():
             saved_formset = formset.save()
             return redirect(f'/home/image_classification/{saved_formset[0].pk}')
@@ -82,7 +89,16 @@ def adding_imageclass(request, pk):
     formset = ImageClassFormset(queryset=ImageClass.objects.none(), instance=task_from_pk)
 
     if request.method == 'POST':
+
         formset = ImageClassFormset(request.POST, instance=task_from_pk)
+        classname = formset.cleaned_data[0]['image_classname']
+
+        if classname in imageclasses_already_in_task:
+            messages.warning(request, "This class already exists! Please choose another name!")
+            context = {'formset': formset, 'task': task_from_pk,
+                       'imageclasses_already_in_task': imageclasses_already_in_task}
+            return render(request, 'ImageClassificationApp/image_classes_form.html', context=context)
+
         if formset.is_valid():
             instances = formset.save()
             pk_imageclass = instances[0].pk

@@ -8,10 +8,10 @@
 <div class="container">
 
     <div>
-        Task : {{task.task_name}}
+        <h3>Task : {{task.task_name}}</h3>
     </div>
     <div>
-        Images class : {{imageclass.image_classname}}
+        <h3>Images class : {{imageclass.image_classname}}</h3>
     </div>
 
 
@@ -20,8 +20,8 @@
             {% csrf_token %}
 
             <input type="file" name="images" multiple>
-            <input type="submit" name="add_another_class" value="Add another class">
-            <input type="submit" name="done" value="Done adding classes">
+            <input type="submit" class="green_button" name="add_another_class" value="Add another class">
+            <input type="submit" class="green_button" name="done" value="Done adding classes">
 
         </form>
     </div>

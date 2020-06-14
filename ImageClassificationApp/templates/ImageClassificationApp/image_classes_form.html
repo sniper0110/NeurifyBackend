@@ -3,27 +3,25 @@
 
 {% extends "ImageClassificationApp/home.html" %}
 
+<link rel="stylesheet" href="">
 
 {% block main_content %}
 <div class="container">
 
     <div>
-        Task : {{task.task_name}}
+        <h3>Task : {{task.task_name}}</h3>
     </div>
     <div>
         {% if imageclasses_already_in_task %}
-            <div>
-                Already created classes :
-            </div>
-
+        <div>
+            <span>Already created classes :</span>
             {% for imgclass in imageclasses_already_in_task %}
-                <div>
-                    {{imgclass}}
-                </div>
+                {{imgclass}}
             {% endfor %}
+        </div>
+
         {% endif %}
     </div>
-
 
 
     <div class="task-form">
@@ -31,9 +29,20 @@
             {% csrf_token %}
             {{formset.as_p}}
             {{form.as_p}}
-            <input type="submit" value="Save">
+
+            {% if messages %}
+              <ul class="messages">
+                {% for message in messages %}
+                  <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            <input class="green_button" type="submit" value="Save">
         </form>
     </div>
+
+
 
   </div>
 {% endblock %}
