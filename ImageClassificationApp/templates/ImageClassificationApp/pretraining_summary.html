@@ -12,7 +12,8 @@
 
 
 {% if last_task %}
-
+    <h1 style="text-align:center;">Training summary</h1>
+    <br>
     <div>
         <h2>Task : {{last_task.task_name}}</h2>
     </div>
@@ -37,15 +38,12 @@
     </div>
     <br>
     <div>
-        <h2>Training options:</h2>
+        <h2>Chosen training option: {{classification_model}}</h2>
 
         <form action="" method="post">
             {% csrf_token %}
-            {{formset.as_p}}
-            <input class="green_button" type="submit" value="Submit">
+            <input type="submit" class="green_button" value="Start training">
         </form>
-
-
     </div>
 
 {% endif %}

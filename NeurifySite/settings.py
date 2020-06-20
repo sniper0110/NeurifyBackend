@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -148,7 +150,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+# To be able to upload files to Google Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+GS_BUCKET_NAME = 'neurify-bucket'
+GS_PROJECT_ID = 'neurfiy'
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(BASE_DIR, "neurfiy-9544c225013a.json")
+
+from google.oauth2 import service_account
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+)
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "ImageClassificationApp/static"),
+]
+
+# Static and media folders
+STATIC_ROOT = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
+STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/' #'/static/'
+
+MEDIA_ROOT = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'#'media'#os.path.join(BASE_DIR, 'media')
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'

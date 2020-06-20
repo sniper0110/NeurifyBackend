@@ -20,6 +20,7 @@ class Task(models.Model):
     task_name = models.CharField(max_length=30, null=True)
     creation_date = models.DateTimeField(auto_now_add=True, null=True)
 
+
     def __str__(self):
         return self.task_name
 
@@ -39,5 +40,17 @@ class ImageData(models.Model):
 
     imageclass = models.ForeignKey(to=ImageClass, null=True, on_delete=models.CASCADE)
     image = models.ImageField(null=True, upload_to=build_upload_to_path_for_images)
+
+
+CLASSIFICATION_MODELS= (
+    ('inceptionv3', 'InceptionV3'),
+    ('vgg16', 'VGG16')
+)
+
+class ClassificationDeepLearningModel(models.Model):
+
+    task = models.OneToOneField(Task, null=True, on_delete=models.CASCADE)
+    classification_model = models.CharField(max_length=200, null=True, choices=CLASSIFICATION_MODELS)
+
 
 

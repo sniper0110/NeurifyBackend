@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .decorators import unauthenticated_user
-from .forms import UserForm, ImageDataForm
-from .models import Customer, Task, ImageClass, ImageData
+from .forms import UserForm, ImageDataForm, ClassificationDeepLearningModelForm
+from .models import Customer, Task, ImageClass, ImageData, ClassificationDeepLearningModel
 from .validators import image_is_valid
 
 # Create your views here.
@@ -158,12 +158,42 @@ def classification_training(request):
         imagedata_set = imageclass.imagedata_set.all()
         class_to_images_dict.update({imageclass:imagedata_set})
 
+    ClassificationDeepLearningModelFormset = inlineformset_factory(Task, ClassificationDeepLearningModel, fields=('classification_model',), extra=1)
+    formset = ClassificationDeepLearningModelFormset(queryset=ClassificationDeepLearningModel.objects.none(), instance=last_added_task)
 
-    print("last task name is : ", last_added_task.task_name)
-    print("class_to_images_dict = ", class_to_images_dict)
+    if request.method == 'POST':
+        formset = ClassificationDeepLearningModelFormset(request.POST, instance=last_added_task)
+        if formset.is_valid():
+            formset.save()
 
-    context = {'last_task':last_added_task, 'image_classes': image_classes, "class_to_images_dict": class_to_images_dict}
+            return redirect(reverse('ImageClassificationApp:pretraining_summary'))
+
+
+    context = {'last_task':last_added_task, 'image_classes': image_classes,
+               "class_to_images_dict": class_to_images_dict, 'formset':formset}
     return render(request, 'ImageClassificationApp/classification_training_page.html', context=context)
+
+
+def pretraining_summary(request):
+
+    last_added_task = request.user.customer.task_set.last()
+    image_classes = last_added_task.imageclass_set.all()
+    class_to_images_dict = dict()
+
+    for imageclass in image_classes:
+        imagedata_set = imageclass.imagedata_set.all()
+        class_to_images_dict.update({imageclass:imagedata_set})
+
+    classification_model = ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].classification_model
+
+    if request.method == 'POST':
+        print("training should start now!")
+
+    context = {'last_task': last_added_task, 'image_classes': image_classes,
+               "class_to_images_dict": class_to_images_dict, 'classification_model': classification_model}
+
+    return render(request, 'ImageClassificationApp/pretraining_summary.html', context=context)
+
 
 
 @login_required(login_url='ImageClassificationApp:login_page')

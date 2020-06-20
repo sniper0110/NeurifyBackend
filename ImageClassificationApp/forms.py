@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 
 
-from .models import Customer, Task, ImageData, ImageClass
+from .models import Customer, Task, ImageData, ImageClass, ClassificationDeepLearningModel
 
 class UserForm(UserCreationForm):
 
@@ -30,3 +30,9 @@ class ImageDataForm(ModelForm):
         model = ImageData
         fields = '__all__'
 
+
+class ClassificationDeepLearningModelForm(ModelForm):
+
+    class Meta:
+        model = ClassificationDeepLearningModel
+        fields = '__all__'

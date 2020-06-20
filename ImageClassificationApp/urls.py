@@ -13,6 +13,7 @@ urlpatterns=[
     path('home/image_classification/<str:pk1>/<str:pk2>', views.adding_images, name='upload_images'),
     path('home/classification_training', views.classification_training, name='classification_training'),
     path('home/image/classification/history', views.history_page, name='history_page'),
+    path('home/classification/pretraining/summary', views.pretraining_summary, name='pretraining_summary'),
 
     path('login', views.login_page, name='login_page'),
     path('register', views.register_page, name='register_page'),
