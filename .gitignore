@@ -4,3 +4,13 @@ ImageClassificationApp/migrations/
 media/
 gcp_credentials/
 neurfiy-9544c225013a.json
+*.css
+*.js
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.md
+*.txt
+*.woff
+LICENSE
