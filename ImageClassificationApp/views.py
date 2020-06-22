@@ -69,7 +69,8 @@ def adding_task(request):
         formset = TaskFormset(request.POST, instance=request.user.customer)
         task_name = formset.cleaned_data[0]['task_name']
 
-        if task_name in [name.task_name for name in Task.objects.all()]:
+        #if task_name in [name.task_name for name in Task.objects.all()]:
+        if task_name in [usertask.task_name for usertask in request.user.customer.task_set.all()]:
             messages.warning(request, "Task name already exists! Please choose another name!")
             context = {'formset': formset}
             return render(request, 'ImageClassificationApp/image_classification_content.html', context=context)

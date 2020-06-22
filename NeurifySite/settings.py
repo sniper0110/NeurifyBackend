@@ -169,8 +169,8 @@ STATICFILES_DIRS = [
 ]
 
 # Static and media folders
-STATIC_ROOT = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
-STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/' #'/static/'
+#STATIC_ROOT = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
+STATIC_URL = '/static/' #f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/' #
 
 MEDIA_ROOT = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'#'media'#os.path.join(BASE_DIR, 'media')
 MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'

@@ -11,12 +11,14 @@
     <div>
         <h3>Task : {{task.task_name}}</h3>
     </div>
+    <br>
     <div>
         {% if imageclasses_already_in_task %}
         <div>
             <span>Already created classes :</span>
             {% for imgclass in imageclasses_already_in_task %}
                 {{imgclass}}
+                <br>
             {% endfor %}
         </div>
 
