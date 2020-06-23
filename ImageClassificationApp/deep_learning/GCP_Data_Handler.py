@@ -2,12 +2,6 @@ from google.cloud import storage
 import os
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--bucket_name", type=str, help="bucket name from GCP buckets", default="neurify-bucket")
-parser.add_argument("--local_directory", type=str, help="local directory where downloaded data will be saved",
-                    default="ImageClassificationApp/deep_learning/downloaded_data")
-
-args = parser.parse_args()
 
 path_to_credentials = 'neurfiy-9544c225013a.json'
 
@@ -95,6 +89,12 @@ def download_data_to_local_directory(local_directory, bucket_name, username=None
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--bucket_name", type=str, help="bucket name from GCP buckets", default="neurify-bucket")
+    parser.add_argument("--local_directory", type=str, help="local directory where downloaded data will be saved",
+                        default="ImageClassificationApp/deep_learning/downloaded_data")
+
+    args = parser.parse_args()
     print("Downloading data from bucket...")
     download_data_to_local_directory(args.local_directory, args.bucket_name)
     print(f"Finished downloading data to local directory : {args.local_directory}")

@@ -5,72 +5,89 @@ from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.optimizers import SGD, Adam
 from sklearn.metrics import classification_report
-#from imutils import paths
 import numpy as np
-import pickle
 import os
 import split_folders
 import argparse
+import glob
 
 from GCP_Data_Handler import download_data_to_local_directory
 
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--path_to_downloaded_data", type=str, help="self explanatory",
-                    default="./downloaded_data/deeplearning_data/")
+def get_number_of_images_in_directory(directory):
+    totalcount = 0
+    for root, dirnames, filenames in os.walk(directory):
+        for filename in filenames:
+            _, ext = os.path.splitext(filename)
+            if ext in [".png", ".jpg", ".jpeg"]:
+                totalcount += 1
 
-#parser.add_argument("--path_to_splitted_data", type=str, default="./downloaded_data/splitted_data/",
-#                    help="after we split the data into train/val/test we save it in this directory")
-
-parser.add_argument("--bucket_name", type=str, help="bucket name from GCP buckets", default="online-deeplearning-bucket")
-parser.add_argument("--local_directory", type=str, help="local directory where downloaded data will be saved",
-                    default="./downloaded_data")
-
-args = parser.parse_args()
+    return totalcount
 
 
-def main(bucket_name):
+def get_number_of_classes(directory_of_images_folders):
+
+    list_of_images_folders = glob.glob(os.path.join(directory_of_images_folders, '*'))
+    nbr_classes = 0
+
+    for directory in list_of_images_folders:
+        if os.path.isdir(directory):
+            nbr_classes += 1
+
+    return nbr_classes
+
+
+
+def main(bucket_name, username, task_name):
+
+    #path_to_downloaded_data = os.path.join('./training_data/downloaded_data/data/classification/', username, task_name)
+    path_to_downloaded_data = os.path.join('./training_data/downloaded_data')
+    if not os.path.isdir(path_to_downloaded_data):
+        os.makedirs(path_to_downloaded_data)
+    print('path_to_downloaded_data : ', path_to_downloaded_data)
+
     # Download data
-    print(f"Downloading data from bucket {bucket_name}")
-    download_data_to_local_directory(args.local_directory, bucket_name)
+    print("Downloading data ...")
+    download_data_to_local_directory(path_to_downloaded_data, bucket_name, username)
+    print("Done downloading data.")
 
-    batch_size = 2
-    nbr_classes = 2
-
-    #path_to_downloaded_data = './downloaded_data/deeplearning_data/'
-    #path_to_splited_data = './downloaded_data/splited_data/'
-
-    def get_number_of_images_in_directory(directory):
-        totalcount = 0
-        for root, dirnames, filenames in os.walk(directory):
-            for filename in filenames:
-                _, ext = os.path.splitext(filename)
-                if ext in [".png", ".jpg", ".jpeg"]:
-                    totalcount += 1
-
-        return totalcount
-
-    path_to_splitted_data = './downloaded_data/splitted_data/'
+    path_to_splitted_data = os.path.join('./training_data/splitted_data/', username, task_name)
     if not os.path.isdir(path_to_splitted_data):
         os.makedirs(path_to_splitted_data)
+    print('path_to_splitted_data : ', path_to_splitted_data)
 
-    split_folders.ratio(args.path_to_downloaded_data, output=path_to_splitted_data, seed=1337, ratio=(.7, .15, .15))
+
+    path_to_folders_of_images = os.path.join(path_to_downloaded_data, 'data/classification', username, task_name)
+
+    nbr_classes = get_number_of_classes(path_to_folders_of_images)
+    print('nbr_classes : ', nbr_classes)
+    batch_size = 8
+
+
+    split_folders.ratio(path_to_folders_of_images, output=path_to_splitted_data, seed=27, ratio=(.7, .15, .15))
     print("Done splitting data into train/val/test!")
 
 
-
     trainPath = os.path.join(path_to_splitted_data, 'train')
+    if not os.path.isdir(trainPath):
+        os.makedirs(trainPath)
+
     valPath = os.path.join(path_to_splitted_data, 'val')
+    if not os.path.isdir(valPath):
+        os.makedirs(valPath)
+
     testPath = os.path.join(path_to_splitted_data, 'test')
+    if not os.path.isdir(testPath):
+        os.makedirs(testPath)
 
     # determine the total number of image paths in training, validation,
     # and testing directories
-    totalTrain = get_number_of_images_in_directory(trainPath) #len(list(paths.list_images(trainPath)))
-    totalVal = get_number_of_images_in_directory(valPath) #len(list(paths.list_images(valPath)))
-    totalTest = get_number_of_images_in_directory(testPath) #len(list(paths.list_images(testPath)))
+    totalTrain = get_number_of_images_in_directory(trainPath)
+    totalVal = get_number_of_images_in_directory(valPath)
+    totalTest = get_number_of_images_in_directory(testPath)
 
 
     # initialize the training data augmentation object
@@ -122,10 +139,7 @@ def main(bucket_name):
         batch_size=batch_size)
 
 
-
-
-    # load the VGG16 network, ensuring the head FC layer sets are left
-    # off
+    # load the VGG16 network, ensuring the head FC layer sets are left off
     baseModel = InceptionV3(weights="imagenet", include_top=False,
         input_tensor=Input(shape=(224, 224, 3)))
 
@@ -149,7 +163,8 @@ def main(bucket_name):
     # compile our model (this needs to be done after our setting our
     # layers to being non-trainable
     print("[INFO] compiling model...")
-    opt = SGD(lr=1e-4, momentum=0.9)
+    #opt = SGD(lr=1e-4, momentum=0.9)
+    opt = Adam(lr=1e-5)
     model.compile(loss="categorical_crossentropy", optimizer=opt,
         metrics=["accuracy"])
 
@@ -162,7 +177,11 @@ def main(bucket_name):
         steps_per_epoch=totalTrain // batch_size,
         validation_data=valGen,
         validation_steps=totalVal // batch_size,
-        epochs=15)
+        epochs=25)
+
+
+
+
 
     print("[INFO] evaluating after fine-tuning network...")
     testGen.reset()
@@ -174,7 +193,22 @@ def main(bucket_name):
 
     print("Done training and testing!")
     #plot_training(H, 20, config.UNFROZEN_PLOT_PATH)
+    print(H.history)
 
 
 if __name__ == '__main__':
-    main("online-deeplearning-bucket")
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--bucket_name", type=str, help="bucket name from GCP buckets", default="neurify-bucket")
+    parser.add_argument("--local_directory", type=str, help="local directory where downloaded data will be saved",
+                        default="./deeplearning/downloaded_data")
+
+    parser.add_argument("--username", type=str, help="Username in the backend.", default='stuned')
+    parser.add_argument("--task_name", type=str, help="User's task name in the backend to fetch his/her data",
+                        default='cats_and_dogs')
+
+    args = parser.parse_args()
+
+    main(args.bucket_name, args.username, args.task_name)
+
+
