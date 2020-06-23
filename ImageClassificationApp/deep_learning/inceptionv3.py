@@ -92,6 +92,7 @@ def main(bucket_name, username, task_name):
 
     # initialize the training data augmentation object
     trainAug = ImageDataGenerator(
+        rescale=1. / 255,
         rotation_range=30,
         zoom_range=0.15,
         width_shift_range=0.2,
@@ -102,7 +103,9 @@ def main(bucket_name, username, task_name):
 
     # initialize the validation/testing data augmentation object (which
     # we'll be adding mean subtraction to)
-    valAug = ImageDataGenerator()
+    valAug = ImageDataGenerator(
+        rescale=1. / 255,
+    )
 
     # define the ImageNet mean subtraction (in RGB order) and set the
     # the mean subtraction value for each of the data augmentation
