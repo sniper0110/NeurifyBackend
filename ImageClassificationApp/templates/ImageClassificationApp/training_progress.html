@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "ImageClassificationApp/home.html" %}
+{% load static %}
+
+
+
+{% block main_content %}
+<div class="container">
+
+<h1>This page will show the results of training (plot of loss function, accuracy, confusion matrix, ...)</h1>
+
+
+
+
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'ImageClassificationApp/js/training_progress.js' %}"></script>
+{% endblock %}
+
+</html>
