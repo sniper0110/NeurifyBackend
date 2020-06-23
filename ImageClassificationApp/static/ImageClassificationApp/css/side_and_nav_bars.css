@@ -128,7 +128,7 @@
   position: fixed;
   top: 60px;
   left: 0;
-  width: 225px;
+  width: 275px;
   height: 100%;
   background: #004D40;
   transition: all 0.3s ease;
@@ -163,8 +163,8 @@
 
 .main_container .container{
   margin-top: 60px;
-  width: calc(100% - 225px);
-  margin-left: 225px;
+  width: calc(100% - 275px);
+  margin-left: 275px;
   padding: 30px;
   transition: all 0.3s ease;
 }
