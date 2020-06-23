@@ -8,6 +8,7 @@ from .decorators import unauthenticated_user
 from .forms import UserForm, ImageDataForm, ClassificationDeepLearningModelForm
 from .models import Customer, Task, ImageClass, ImageData, ClassificationDeepLearningModel
 from .validators import image_is_valid
+from .deep_learning.inceptionv3 import run_training
 
 # Create your views here.
 
@@ -188,8 +189,17 @@ def pretraining_summary(request):
     classification_model = ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].classification_model
 
     if request.method == 'POST':
-
         print("training should start now!")
+        try:
+            run_training(bucket_name="neurify-bucket", username=request.user.username, task_name=last_added_task.task_name)
+        except:
+            print("Could not run training!")
+        else:
+            print("training has finished!")
+            context = {'done': 'done'}
+            return redirect(reverse('ImageClassificationApp:training_progress'))
+
+
 
     context = {'last_task': last_added_task, 'image_classes': image_classes,
                "class_to_images_dict": class_to_images_dict, 'classification_model': classification_model}

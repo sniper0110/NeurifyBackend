@@ -13,7 +13,7 @@ import split_folders
 import argparse
 import glob
 
-from GCP_Data_Handler import download_data_to_local_directory
+from .GCP_Data_Handler import download_data_to_local_directory
 
 
 
@@ -41,7 +41,7 @@ def get_number_of_classes(directory_of_images_folders):
 
 
 
-def main(bucket_name, username, task_name):
+def run_training(bucket_name, username, task_name):
 
     #path_to_downloaded_data = os.path.join('./training_data/downloaded_data/data/classification/', username, task_name)
     path_to_downloaded_data = os.path.join('./training_data/downloaded_data')
@@ -180,7 +180,7 @@ def main(bucket_name, username, task_name):
         steps_per_epoch=totalTrain // batch_size,
         validation_data=valGen,
         validation_steps=totalVal // batch_size,
-        epochs=25)
+        epochs=1)
 
 
 
@@ -212,6 +212,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    main(args.bucket_name, args.username, args.task_name)
+    run_training(args.bucket_name, args.username, args.task_name)
 
 
