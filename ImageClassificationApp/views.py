@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 
 from .decorators import unauthenticated_user
 from .forms import UserForm, ImageDataForm, ClassificationDeepLearningModelForm
@@ -149,6 +150,7 @@ def adding_images(request, pk1, pk2):
     return render(request, 'ImageClassificationApp/images_upload_form.html', context=context)
 
 
+@cache_page(60 * 15)
 @login_required(login_url='ImageClassificationApp:login_page')
 def classification_training(request):
 
@@ -176,6 +178,8 @@ def classification_training(request):
     return render(request, 'ImageClassificationApp/classification_training_page.html', context=context)
 
 
+
+@cache_page(60 * 15)
 def pretraining_summary(request):
 
     last_added_task = request.user.customer.task_set.last()
