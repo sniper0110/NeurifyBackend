@@ -188,12 +188,20 @@ def pretraining_summary(request):
     classification_model = ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].classification_model
 
     if request.method == 'POST':
+
         print("training should start now!")
 
     context = {'last_task': last_added_task, 'image_classes': image_classes,
                "class_to_images_dict": class_to_images_dict, 'classification_model': classification_model}
 
     return render(request, 'ImageClassificationApp/pretraining_summary.html', context=context)
+
+
+
+@login_required(login_url='ImageClassificationApp:login_page')
+def training_progress_and_result(request):
+
+    return render(request, 'ImageClassificationApp/training_progress.html')
 
 
 
