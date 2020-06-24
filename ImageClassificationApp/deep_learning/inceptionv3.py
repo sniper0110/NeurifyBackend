@@ -42,15 +42,6 @@ def get_number_of_classes(directory_of_images_folders):
     return nbr_classes
 
 
-early_stopping = EarlyStopping(monitor='val_loss',
-                               patience=5)
-
-ckpt_saver = ModelCheckpoint('./training_data/SavedCheckpoints',
-                            monitor='val_accuracy',
-                            mode='max',
-                            save_best_only=True,
-                            save_freq= 'epoch',
-                            verbose=1, ) #save_best_only=True
 
 
 def run_training(bucket_name, username, task_name):
@@ -182,10 +173,18 @@ def run_training(bucket_name, username, task_name):
     model.compile(loss="categorical_crossentropy", optimizer=opt,
         metrics=["accuracy"])
 
-    # train the head of the network for a few epochs (all other layers
-    # are frozen) -- this will allow the new FC layers to start to become
-    # initialized with actual "learned" values versus pure random
     print("[INFO] training head...")
+
+    early_stopping = EarlyStopping(monitor='val_loss',
+                                   patience=5)
+
+    ckpt_saver = ModelCheckpoint(f'./training_artifacts/{username}/{task_name}/SavedCheckpoints',
+                                 monitor='val_accuracy',
+                                 mode='max',
+                                 save_best_only=True,
+                                 save_freq='epoch',
+                                 verbose=1)
+
     H = model.fit_generator(
         trainGen,
         steps_per_epoch=totalTrain // batch_size,
@@ -206,7 +205,6 @@ def run_training(bucket_name, username, task_name):
                                 target_names=testGen.class_indices.keys()))
 
     print("Done training and testing!")
-    #plot_training(H, 20, config.UNFROZEN_PLOT_PATH)
     print(H.history)
     clear_session()
 
