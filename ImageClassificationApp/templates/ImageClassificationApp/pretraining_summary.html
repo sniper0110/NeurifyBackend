@@ -3,6 +3,7 @@
 
 {% extends "ImageClassificationApp/home.html" %}
 {% load static %}
+{% load cache %}
 
 
 
@@ -21,6 +22,8 @@
     <div>
         <h2>Your data:</h2>
     </div>
+
+    {% cache 3600 images_gallery request.user.username %}
     <div>
         {% for imageclass in image_classes %}
         <div class="card">
@@ -36,6 +39,7 @@
         </div>
         {% endfor %}
     </div>
+    {% endcache %}
     <br>
     <div>
         <h2>Chosen training option: {{classification_model}}</h2>
