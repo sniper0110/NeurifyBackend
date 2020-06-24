@@ -9,13 +9,7 @@
 {% block main_content %}
 <div class="container">
 
-{% if done %}
-    <h1>Training is done!</h1>
-{% else %}
-    <h1>This page will show the results of training (plot of loss function, accuracy, confusion matrix, ...)</h1>
-{% endif %}
-
-
+<canvas id="myChart" width="500" height="300"></canvas>
 
 
 
@@ -23,7 +17,9 @@
 {% endblock %}
 
 {% block javascript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
 <script src="{% static 'ImageClassificationApp/js/training_progress.js' %}"></script>
+
 {% endblock %}
 
 </html>
