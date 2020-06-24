@@ -6,6 +6,8 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import SGD, Adam
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.backend import clear_session
 from sklearn.metrics import classification_report
 import numpy as np
 import os
@@ -39,6 +41,16 @@ def get_number_of_classes(directory_of_images_folders):
 
     return nbr_classes
 
+
+early_stopping = EarlyStopping(monitor='val_loss',
+                               patience=5)
+
+ckpt_saver = ModelCheckpoint('./training_data/SavedCheckpoints',
+                            monitor='val_accuracy',
+                            mode='max',
+                            save_best_only=True,
+                            save_freq= 'epoch',
+                            verbose=1, ) #save_best_only=True
 
 
 def run_training(bucket_name, username, task_name):
@@ -110,9 +122,9 @@ def run_training(bucket_name, username, task_name):
     # define the ImageNet mean subtraction (in RGB order) and set the
     # the mean subtraction value for each of the data augmentation
     # objects
-    mean = np.array([123.68, 116.779, 103.939], dtype="float32")
-    trainAug.mean = mean
-    valAug.mean = mean
+    # mean = np.array([123.68, 116.779, 103.939], dtype="float32")
+    # trainAug.mean = mean
+    # valAug.mean = mean
 
     # initialize the training generator
     trainGen = trainAug.flow_from_directory(
@@ -143,8 +155,7 @@ def run_training(bucket_name, username, task_name):
 
 
     # load the VGG16 network, ensuring the head FC layer sets are left off
-    baseModel = InceptionV3(weights="imagenet", include_top=False,
-        input_tensor=Input(shape=(224, 224, 3)))
+    baseModel = InceptionV3(weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3)))
 
     # construct the head of the model that will be placed on top of the
     # the base model
@@ -180,8 +191,8 @@ def run_training(bucket_name, username, task_name):
         steps_per_epoch=totalTrain // batch_size,
         validation_data=valGen,
         validation_steps=totalVal // batch_size,
-        epochs=1)
-
+        epochs=2,
+        callbacks=[early_stopping, ckpt_saver])
 
 
 
@@ -197,6 +208,8 @@ def run_training(bucket_name, username, task_name):
     print("Done training and testing!")
     #plot_training(H, 20, config.UNFROZEN_PLOT_PATH)
     print(H.history)
+    clear_session()
+
 
 
 if __name__ == '__main__':
