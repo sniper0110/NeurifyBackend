@@ -150,7 +150,7 @@ def adding_images(request, pk1, pk2):
     return render(request, 'ImageClassificationApp/images_upload_form.html', context=context)
 
 
-@cache_page(60 * 15)
+@cache_page(60 * 60 * 24)
 @login_required(login_url='ImageClassificationApp:login_page')
 def classification_training(request):
 
@@ -179,7 +179,7 @@ def classification_training(request):
 
 
 
-@cache_page(60 * 15)
+@cache_page(60 * 60 * 24)
 def pretraining_summary(request):
 
     last_added_task = request.user.customer.task_set.last()
@@ -202,7 +202,6 @@ def pretraining_summary(request):
             print("training has finished!")
             context = {'done': 'done'}
             return redirect(reverse('ImageClassificationApp:training_progress'))
-
 
 
     context = {'last_task': last_added_task, 'image_classes': image_classes,
