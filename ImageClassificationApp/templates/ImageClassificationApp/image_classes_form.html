@@ -32,6 +32,8 @@
             {{formset.as_p}}
             {{form.as_p}}
 
+            <input class="green_button" type="submit" value="Save">
+
             {% if messages %}
               <ul class="messages">
                 {% for message in messages %}
@@ -40,7 +42,7 @@
               </ul>
             {% endif %}
 
-            <input class="green_button" type="submit" value="Save">
+
         </form>
     </div>
 
