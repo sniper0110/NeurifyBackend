@@ -194,13 +194,16 @@ def pretraining_summary(request):
 
     if request.method == 'POST':
         print("training should start now!")
+
+
         try:
-            run_training(bucket_name="neurify-bucket", username=request.user.username, task_name=last_added_task.task_name)
+            history = run_training(bucket_name="neurify-bucket", username=request.user.username, task_name=last_added_task.task_name)
         except:
             print("Could not run training!")
         else:
             print("training has finished!")
             context = {'done': 'done'}
+            messages.add_message(request, messages.INFO, {"history": history})
             return redirect(reverse('ImageClassificationApp:training_progress'))
 
 
