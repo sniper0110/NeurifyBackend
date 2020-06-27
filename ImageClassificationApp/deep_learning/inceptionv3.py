@@ -67,7 +67,7 @@ def run_training(bucket_name, username, task_name):
 
     nbr_classes = get_number_of_classes(path_to_folders_of_images)
     print('nbr_classes : ', nbr_classes)
-    batch_size = 8
+
 
 
     split_folders.ratio(path_to_folders_of_images, output=path_to_splitted_data, seed=27, ratio=(.7, .15, .15))
@@ -92,8 +92,11 @@ def run_training(bucket_name, username, task_name):
     totalVal = get_number_of_images_in_directory(valPath)
     totalTest = get_number_of_images_in_directory(testPath)
 
+    # TODO: make sure there is a minimum number of images so that we can use a large batch size
+    batch_size = min(8, totalVal)
 
-    # initialize the training data augmentation object
+
+                     # initialize the training data augmentation object
     trainAug = ImageDataGenerator(
         rescale=1. / 255,
         rotation_range=30,
@@ -110,9 +113,7 @@ def run_training(bucket_name, username, task_name):
         rescale=1. / 255,
     )
 
-    # define the ImageNet mean subtraction (in RGB order) and set the
-    # the mean subtraction value for each of the data augmentation
-    # objects
+
     # mean = np.array([123.68, 116.779, 103.939], dtype="float32")
     # trainAug.mean = mean
     # valAug.mean = mean
@@ -194,8 +195,6 @@ def run_training(bucket_name, username, task_name):
         callbacks=[early_stopping, ckpt_saver])
 
 
-
-
     print("[INFO] evaluating after fine-tuning network...")
     testGen.reset()
     predIdxs = model.predict_generator(testGen,
@@ -207,6 +206,8 @@ def run_training(bucket_name, username, task_name):
     print("Done training and testing!")
     print(H.history)
     clear_session()
+
+    return H.history
 
 
 
