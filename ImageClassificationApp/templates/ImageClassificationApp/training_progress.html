@@ -9,7 +9,15 @@
 {% block main_content %}
 <div class="container">
 
-<canvas id="myChart" width="500" height="300"></canvas>
+{% if messages %}
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+{% endif %}
+
+<h4 id='neatdata'></h4>
+
+{# <canvas id="myChart" width="500" height="300"></canvas> #}
 
 
 
@@ -18,8 +26,23 @@
 
 {% block javascript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-<script src="{% static 'ImageClassificationApp/js/training_progress.js' %}"></script>
+{# <script src="{% static 'ImageClassificationApp/js/training_progress.js' %}"></script> #}
 
+<script type=”text/javscript”>
+console.log("Starting chart.js")
+
+var msgs = "{{messages}}"
+
+var i;
+for (i = 0; i < msgs.length; i++) {
+  console.log(msgs[i])
+}
+
+console.log(msgs)
+console.log("Ending chart.js")
+
+
+</script>
 {% endblock %}
 
 </html>
