@@ -160,6 +160,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+
 # To be able to upload files to Google Storage
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
@@ -179,8 +180,16 @@ STATICFILES_DIRS = [
 ]
 
 # Static and media folders
-#STATIC_ROOT = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
-STATIC_URL = '/static/' #f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/' #
+STATIC_ROOT = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
+STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/' # '/static/' #
 
 MEDIA_ROOT = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'#'media'#os.path.join(BASE_DIR, 'media')
 MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
+
+'''
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+'''
