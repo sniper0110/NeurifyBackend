@@ -63,9 +63,9 @@ def download_data_to_local_directory(local_directory, bucket_name, username=None
     # TODO: check whether bucket exists or not
 
     if username is not None:
-        all_blobs = storage_client.list_blobs(bucket_name, prefix=f'data/classification/{username}')
+        all_blobs = storage_client.list_blobs(bucket_name, prefix=f'data/classification/user_uploaded_images/{username}')
     else:
-        all_blobs = storage_client.list_blobs(bucket_name, prefix='data/classification')
+        all_blobs = storage_client.list_blobs(bucket_name, prefix='data/classification/user_uploaded_images')
 
 
     if not os.path.isdir(local_directory):

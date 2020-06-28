@@ -63,7 +63,7 @@ def run_training(bucket_name, username, task_name):
     print('path_to_splitted_data : ', path_to_splitted_data)
 
 
-    path_to_folders_of_images = os.path.join(path_to_downloaded_data, 'data/classification', username, task_name)
+    path_to_folders_of_images = os.path.join(path_to_downloaded_data, 'data/classification/user_uploaded_images/', username, task_name)
 
     nbr_classes = get_number_of_classes(path_to_folders_of_images)
     print('nbr_classes : ', nbr_classes)
