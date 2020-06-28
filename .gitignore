@@ -2,7 +2,7 @@ db.sqlite3
 __pycache__/
 ImageClassificationApp/migrations/
 media/data/*
-
+*.svg
 gcp_credentials/
 neurfiy-9544c225013a.json
 *.css
