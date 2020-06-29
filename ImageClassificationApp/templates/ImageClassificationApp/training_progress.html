@@ -26,23 +26,9 @@
 
 {% block javascript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
-{# <script src="{% static 'ImageClassificationApp/js/training_progress.js' %}"></script> #}
-
-<script type=”text/javscript”>
-console.log("Starting chart.js")
-
-var msgs = "{{messages}}"
-
-var i;
-for (i = 0; i < msgs.length; i++) {
-  console.log(msgs[i])
-}
-
-console.log(msgs)
-console.log("Ending chart.js")
+<script src="{% static 'ImageClassificationApp/js/training_progress.js' %}"></script>
 
 
-</script>
 {% endblock %}
 
 </html>

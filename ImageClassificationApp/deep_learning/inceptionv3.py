@@ -207,7 +207,7 @@ def run_training(bucket_name, username, task_name):
     print(H.history)
     clear_session()
 
-    return H.history
+    return H.history, model
 
 
 

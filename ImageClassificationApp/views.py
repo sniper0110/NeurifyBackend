@@ -5,9 +5,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
 
+import numpy as np
+import os
+import tensorflow as tf
+import shutil
+
 from .decorators import unauthenticated_user
 from .forms import UserForm, ImageDataForm, ClassificationDeepLearningModelForm
-from .models import Customer, Task, ImageClass, ImageData, ClassificationDeepLearningModel
+from .models import Customer, Task, ImageClass, ImageData, ClassificationDeepLearningModel, DeepLearningModelArtifacts
 from .validators import image_is_valid
 from .deep_learning.inceptionv3 import run_training
 
@@ -162,7 +167,7 @@ def classification_training(request):
         imagedata_set = imageclass.imagedata_set.all()
         class_to_images_dict.update({imageclass:imagedata_set})
 
-    ClassificationDeepLearningModelFormset = inlineformset_factory(Task, ClassificationDeepLearningModel, fields=('classification_model',), extra=1)
+    ClassificationDeepLearningModelFormset = inlineformset_factory(Task, ClassificationDeepLearningModel, fields=('classification_model_architecture',), extra=1)
     formset = ClassificationDeepLearningModelFormset(queryset=ClassificationDeepLearningModel.objects.none(), instance=last_added_task)
 
     if request.method == 'POST':
@@ -190,25 +195,45 @@ def pretraining_summary(request):
         imagedata_set = imageclass.imagedata_set.all()
         class_to_images_dict.update({imageclass:imagedata_set})
 
-    classification_model = ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].classification_model
+    classification_model_architecture = ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].classification_model_architecture
 
     if request.method == 'POST':
         print("training should start now!")
 
 
         try:
-            history = run_training(bucket_name="neurify-bucket", username=request.user.username, task_name=last_added_task.task_name)
+            history, dl_model = run_training(bucket_name="neurify-bucket", username=request.user.username, task_name=last_added_task.task_name)
         except:
             print("Could not run training!")
         else:
             print("training has finished!")
-            context = {'done': 'done'}
+            print(f"training history : {history}")
+
+            print("Saving training history...")
+            directory_to_save_history = f'training_artifacts/{request.user.username}/{last_added_task.task_name}/training_history/'
+            if not os.path.isdir(directory_to_save_history):
+                os.makedirs(directory_to_save_history)
+
+            path_to_save_history = os.path.join(directory_to_save_history, f'{last_added_task.task_name}_history.npy')
+            np.save(path_to_save_history, history)
+            ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].set_history_file(path_to_save_history)
+
+
+            directory_to_save_pb_model = f'training_artifacts/{request.user.username}/{last_added_task.task_name}/PBSavedModel/'
+            if not os.path.isdir(directory_to_save_pb_model):
+                os.makedirs(directory_to_save_pb_model)
+
+            path_to_zipped_folder = f"training_artifacts/{request.user.username}/{last_added_task.task_name}/PBSavedModel/final_model"
+            tf.saved_model.save(dl_model, directory_to_save_pb_model)
+            shutil.make_archive(path_to_zipped_folder, 'zip', directory_to_save_pb_model)
+            ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].set_trained_model_file(path_to_zipped_folder+'.zip')
+
             messages.add_message(request, messages.INFO, {"history": history})
             return redirect(reverse('ImageClassificationApp:training_progress'))
 
 
     context = {'last_task': last_added_task, 'image_classes': image_classes,
-               "class_to_images_dict": class_to_images_dict, 'classification_model': classification_model}
+               "class_to_images_dict": class_to_images_dict, 'classification_model': classification_model_architecture}
 
     return render(request, 'ImageClassificationApp/pretraining_summary.html', context=context)
 
