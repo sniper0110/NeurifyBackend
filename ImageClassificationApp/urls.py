@@ -16,6 +16,8 @@ urlpatterns=[
     path('home/classification/pretraining/summary', views.pretraining_summary, name='pretraining_summary'),
     path('home/classification/training/progress', views.training_progress_and_result, name='training_progress'),
 
+    path('api/data/training/history/', views.training_history_data, name='training_history_data'),
+
     path('login', views.login_page, name='login_page'),
     path('register', views.register_page, name='register_page'),
     path('', views.logout_user, name='logout'),

@@ -4,11 +4,14 @@ from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
+from django.http import JsonResponse
 
 import numpy as np
 import os
 import tensorflow as tf
 import shutil
+import requests
+import io
 
 from .decorators import unauthenticated_user
 from .forms import UserForm, ImageDataForm, ClassificationDeepLearningModelForm
@@ -243,6 +246,18 @@ def pretraining_summary(request):
 def training_progress_and_result(request):
 
     return render(request, 'ImageClassificationApp/training_progress.html')
+
+
+
+
+def training_history_data(request):
+    last_added_task = request.user.customer.task_set.last()
+    history_file_url = ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].history_of_model_training.url
+
+    response = requests.get(history_file_url)
+    training_history = np.load(io.BytesIO(response.content), allow_pickle=True)
+
+    return JsonResponse(training_history.item())
 
 
 
