@@ -11,17 +11,24 @@
 <div class="container">
 
     <div>
-        <h3>Task : {{task.task_name}}</h3>
+        <h2 style="font-weight: bold;">Task</h2>
+    </div>
+    <div>
+        <h4>{{last_task.task_name}}</h4>
     </div>
     <br>
     <div>
         {% if imageclasses_already_in_task %}
         <div>
-            <span>Already created classes :</span>
-            {% for imgclass in imageclasses_already_in_task %}
-                {{imgclass}}
-                <br>
-            {% endfor %}
+            <div><h4>Already created classes :</h4></div>
+            <ul style="list-style-type:circle">
+                {% for imgclass in imageclasses_already_in_task %}
+                    <li>
+                        {{imgclass}}
+                    </li>
+                {% endfor %}
+            </ul>
+
         </div>
 
         {% endif %}
@@ -32,7 +39,7 @@
         <form action="" method="post">
 
             {% csrf_token %}
-            {% crispy formset formset_helper %}
+            <h4>{% crispy formset formset_helper %}</h4>
 
         </form>
     </div>

@@ -14,11 +14,14 @@
 {% if last_task %}
 
     <div>
-        <h2>Task : {{last_task.task_name}}</h2>
+        <h2 style="font-weight: bold;">Task</h2>
+    </div>
+    <div>
+        <h4>{{last_task.task_name}}</h4>
     </div>
     <br>
     <div>
-        <h2>Your data:</h2>
+        <h2 style="font-weight: bold;">Your data</h2>
     </div>
     <div>
         {% for imageclass in image_classes %}
@@ -37,11 +40,11 @@
     </div>
     <br>
     <div>
-        <h2>Training options:</h2>
+        <h2 style="font-weight: bold;">Training options</h2>
 
         <form action="" method="post">
             {% csrf_token %}
-            {{formset.as_p}}
+            <h4>{{formset.as_p}}</h4>
             <input class="green_button" type="submit" value="Submit">
         </form>
 

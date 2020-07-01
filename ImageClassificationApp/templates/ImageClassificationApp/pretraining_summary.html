@@ -13,14 +13,17 @@
 
 
 {% if last_task %}
-    <h1 style="text-align:center;">Pre-training summary</h1>
-    <br>
+
     <div>
-        <h2>Task : {{last_task.task_name}}</h2>
+        <h2 style="font-weight: bold;">Task</h2>
     </div>
+    <div>
+        <h4>{{last_task.task_name}}</h4>
+    </div>
+
     <br>
     <div>
-        <h2>Your data:</h2>
+        <h2 style="font-weight: bold;">Your data</h2>
     </div>
 
     {% cache 3600 images_gallery request.user.username %}
@@ -42,7 +45,12 @@
     {% endcache %}
     <br>
     <div>
-        <h2>Chosen training option: {{classification_model}}</h2>
+        <div>
+            <h2 style="font-weight: bold;">Chosen training option</h2>
+        </div>
+        <div>
+            <h4>{{classification_model}}</h4>
+        </div>
 
         <form action="" method="post">
             {% csrf_token %}

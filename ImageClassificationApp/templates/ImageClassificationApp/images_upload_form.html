@@ -2,6 +2,7 @@
 <html lang="en">
 
 {% extends "ImageClassificationApp/home.html" %}
+{% load static %}
 
 
 {% block main_content %}
@@ -30,5 +31,13 @@
 
   </div>
 {% endblock %}
+
+
+
+{% block javascript %}
+<script src="{% static 'ImageClassificationApp/js/task_details_page.js' %}"></script>
+{% endblock %}
+
+
 
 </html>
