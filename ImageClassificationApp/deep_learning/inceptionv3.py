@@ -191,7 +191,7 @@ def run_training(bucket_name, username, task_name):
         steps_per_epoch=totalTrain // batch_size,
         validation_data=valGen,
         validation_steps=totalVal // batch_size,
-        epochs=2,
+        epochs=10,
         callbacks=[early_stopping, ckpt_saver])
 
 

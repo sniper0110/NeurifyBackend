@@ -3,10 +3,12 @@ $(document).ready(function(){
       $(".wrapper").toggleClass("active")
     })
 
+    $(".wrapper").toggleClass("active")
+
     $(".top_navbar .fas").click(function(){
        $(".profile_dd").toggleClass("active");
     });
 
-    $(".new_task").toggleClass("active")
+//    $(".new_task").toggleClass("active")
 
 });

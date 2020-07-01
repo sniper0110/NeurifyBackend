@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
+from crispy_forms.layout import Submit, Layout, Field
+
 
 import numpy as np
 import os
@@ -14,7 +16,7 @@ import requests
 import io
 
 from .decorators import unauthenticated_user
-from .forms import UserForm, ImageDataForm, ClassificationDeepLearningModelForm
+from .forms import UserForm, TaskFormSetHelper, ImageClassFormSetHelper
 from .models import Customer, Task, ImageClass, ImageData, ClassificationDeepLearningModel, DeepLearningModelArtifacts
 from .validators import image_is_valid
 from .deep_learning.inceptionv3 import run_training
@@ -73,23 +75,24 @@ def adding_task(request):
 
     TaskFormset = inlineformset_factory(Customer, Task, fields=('task_name',), extra=1)
     formset = TaskFormset(queryset=Task.objects.none(), instance=request.user.customer)
+    formset_helper = TaskFormSetHelper()
+    formset_helper.add_input(Submit("submit", "Save", css_class='green_button'))
 
     if request.method == 'POST':
 
         formset = TaskFormset(request.POST, instance=request.user.customer)
         task_name = formset.cleaned_data[0]['task_name']
 
-        #if task_name in [name.task_name for name in Task.objects.all()]:
         if task_name in [usertask.task_name for usertask in request.user.customer.task_set.all()]:
             messages.warning(request, "Task name already exists! Please choose another name!")
-            context = {'formset': formset}
+            context = {'formset': formset, 'formset_helper': formset_helper}
             return render(request, 'ImageClassificationApp/image_classification_content.html', context=context)
 
         if formset.is_valid():
             saved_formset = formset.save()
             return redirect(f'/home/image_classification/{saved_formset[0].pk}')
 
-    context = {'formset': formset}
+    context = {'formset': formset, 'formset_helper': formset_helper}
     return render(request, 'ImageClassificationApp/image_classification_content.html', context=context)
 
 
@@ -102,6 +105,9 @@ def adding_imageclass(request, pk):
     ImageClassFormset = inlineformset_factory(Task, ImageClass, fields=('image_classname',), extra=1)
     formset = ImageClassFormset(queryset=ImageClass.objects.none(), instance=task_from_pk)
 
+    formset_helper = ImageClassFormSetHelper()
+    formset_helper.add_input(Submit("submit", "Save", css_class='green_button'))
+
     if request.method == 'POST':
 
         formset = ImageClassFormset(request.POST, instance=task_from_pk)
@@ -109,8 +115,8 @@ def adding_imageclass(request, pk):
 
         if classname in imageclasses_already_in_task:
             messages.warning(request, "This class already exists! Please choose another name!")
-            context = {'formset': formset, 'task': task_from_pk,
-                       'imageclasses_already_in_task': imageclasses_already_in_task}
+            context = {'formset': formset, 'formset_helper':formset_helper,
+                       'task': task_from_pk, 'imageclasses_already_in_task': imageclasses_already_in_task}
             return render(request, 'ImageClassificationApp/image_classes_form.html', context=context)
 
         if formset.is_valid():
@@ -118,7 +124,8 @@ def adding_imageclass(request, pk):
             pk_imageclass = instances[0].pk
             return redirect(f'/home/image_classification/{pk}/{pk_imageclass}')
 
-    context = {'formset': formset, 'task': task_from_pk, 'imageclasses_already_in_task': imageclasses_already_in_task}
+    context = {'formset': formset, 'formset_helper':formset_helper,
+               'task': task_from_pk, 'imageclasses_already_in_task': imageclasses_already_in_task}
     return render(request, 'ImageClassificationApp/image_classes_form.html', context=context)
 
 
@@ -219,6 +226,7 @@ def pretraining_summary(request):
 
             path_to_save_history = os.path.join(directory_to_save_history, f'{last_added_task.task_name}_history.npy')
             np.save(path_to_save_history, history)
+            print("Done saving training history!")
             ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].set_history_file(path_to_save_history)
 
 

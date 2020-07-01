@@ -8,8 +8,10 @@ $(document).ready(function(){
        $(".profile_dd").toggleClass("active");
     });
 
-    $(".dashboard").addClass("active")
+    $(".training").addClass("active")
 
+    $('label[for="id_classificationdeeplearningmodel-0-DELETE"]').hide();
+    $("#id_classificationdeeplearningmodel-0-DELETE").hide();
 });
 
 
