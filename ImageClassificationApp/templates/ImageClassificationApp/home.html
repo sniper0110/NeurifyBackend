@@ -84,14 +84,39 @@
 
       {% block main_content %}
       <div class="container">
-          <a href="{% url 'ImageClassificationApp:adding_new_task' %}">
-              <div class="card img-classification-card" style="width: 18rem; text-align:center;">
-                  <div class="card-body">
-                    <p class="card-text">Image Classification</p>
-                  </div>
-               </div>
-           </a>
+
+            <div class="card" style="width: 18rem; display:inline-block; margin-right:50px;">
+                <img class="card-img-top" height="250" src="{% static 'ImageClassificationApp/site_images/defect_vs_no_defect_2.png' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Object recognition in images</h5>
+                    <p class="card-text">Train deep learning models to classify images with a few clicks!</p>
+                </div>
+                <a href="{% url 'ImageClassificationApp:adding_new_task' %}" class="btn btn-primary btn-lg btn-block">Go!</a>
+            </div>
+
+          <div class="card" style="width: 18rem; display:inline-block; margin-right:50px;">
+                <img class="card-img-top"  height="250" src="{% static 'ImageClassificationApp/site_images/yolo-object-detection.jpg' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Object Localization in images</h5>
+                    <p class="card-text">Train deep learning models to localize objects in your images!</p>
+                    <p style="color:red; font-weight:bold;">Coming soon!</p>
+                </div>
+            </div>
+
+            <div class="card" style="width: 18rem; display:inline-block; margin-right:50px;">
+                <img class="card-img-top" height="250" src="{% static 'ImageClassificationApp/site_images/ocr.jpg' %}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold;">Text recognition in images (OCR)</h5>
+                    <p class="card-text">Train deep learning models to localize and recognize text in your images!</p>
+                    <p style="color:red; font-weight:bold;">Coming soon!</p>
+                </div>
+            </div>
+
+
+
+
       </div>
+
       {% endblock %}
   </div>
 
