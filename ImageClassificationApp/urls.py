@@ -15,6 +15,7 @@ urlpatterns=[
     path('home/image/classification/history', views.history_page, name='history_page'),
     path('home/classification/pretraining/summary', views.pretraining_summary, name='pretraining_summary'),
     path('home/classification/training/progress', views.training_progress_and_result, name='training_progress'),
+    path('', views.download_trained_model, name='download_trained_model'),
 
     path('api/data/training/history/', views.training_history_data, name='training_history_data'),
 

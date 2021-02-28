@@ -4,7 +4,7 @@ from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from crispy_forms.layout import Submit, Layout, Field
 
 
@@ -14,6 +14,7 @@ import tensorflow as tf
 import shutil
 import requests
 import io
+import mimetypes
 
 from .decorators import unauthenticated_user
 from .forms import UserForm, TaskFormSetHelper, ImageClassFormSetHelper
@@ -275,4 +276,16 @@ def history_page(request):
     return render(request, 'ImageClassificationApp/history_page.html')
 
 
+def download_trained_model(request):
+
+    last_added_task = request.user.customer.task_set.last()
+    trained_model_url = ClassificationDeepLearningModel.objects.filter(task=last_added_task)[0].trained_model_file.url
+
+    print('trained_model_url : ', trained_model_url)
+
+    rp = requests.get(trained_model_url)
+    response = HttpResponse(rp.content, content_type='application/x-zip-compressed')
+    response['Content-Disposition'] = "attachment; trained_model"
+
+    return response
 
